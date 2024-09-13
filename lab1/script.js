@@ -39,15 +39,6 @@ if (checkInput(lastFilm1, rating1)) {
 }
 
 if (checkInput(lastFilm2, rating2)) {
-  console.log('askdmakdamskldamlksdaslkdmalskdm');
-  console.log(
-    (personalMovieDB.movies[lastFilm2] = {
-      name: lastFilm2,
-      rating: rating2,
-    })
-  );
-  console.log('askdmakdamskldamlksdaslkdmalskdm');
-
   personalMovieDB.movies[lastFilm2] = {
     name: lastFilm2,
     rating: rating2,
