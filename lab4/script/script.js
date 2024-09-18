@@ -3,7 +3,7 @@ import { shirts } from '../data/shirts.js';
 import { SELECTED_SHIRT_KEY, storage } from './utils/storage.js';
 import { formatUrl } from './utils/url.js';
 
-function init() {
+function renderMain() {
   const container = document.getElementById('shirts-container');
 
   const navigatePageDetails = (item) => () => {
@@ -46,4 +46,4 @@ function init() {
   renderList(shirts, renderItem);
 }
 
-init();
+renderMain();

@@ -11,7 +11,7 @@ import { SELECTED_SHIRT_KEY, storage } from './utils/storage.js';
 import { SIDE } from './utils/side.js';
 import { formatUrl } from './utils/url.js';
 
-function init() {
+function renderDetails() {
   const container = document.querySelector('.shirt-details');
   const shirt = storage.getItem(SELECTED_SHIRT_KEY) || shirts[0];
 
@@ -52,4 +52,4 @@ function init() {
   container.appendChild(bodyContainer);
 }
 
-init();
+renderDetails();
