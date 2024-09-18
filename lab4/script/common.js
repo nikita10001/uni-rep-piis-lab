@@ -1,3 +1,4 @@
+import { SIDE } from './utils/side.js';
 import { formatUrl } from './utils/url.js';
 
 export const createButton = (props) => {
@@ -26,15 +27,13 @@ export const createButton = (props) => {
   return button;
 };
 
-export const createImageContainer = (shirt) => {
-  const availableColors = Object.keys(shirt.colors);
-
+export const createImageContainer = (shirt, selectedOptions) => {
   const imgContainer = document.createElement('div');
   imgContainer.className = 'image-container';
 
   const img = document.createElement('img');
   img.className = 'shirt-image';
-  img.src = formatUrl(shirt.colors[availableColors[0]].front);
+  img.src = formatUrl(shirt.colors[selectedOptions.color][selectedOptions.side]);
   img.alt = shirt.name;
 
   imgContainer.appendChild(img);
@@ -62,9 +61,7 @@ export const createDescription = (shirt) => {
   return description;
 };
 
-export const createSideSelection = (img, shirt) => {
-  const availableColors = Object.keys(shirt.colors);
-
+export const createSideSelection = (updateOptions) => {
   const sideSelection = document.createElement('div');
   sideSelection.className = 'side-selection';
 
@@ -75,14 +72,14 @@ export const createSideSelection = (img, shirt) => {
   const frontButton = createButton({
     text: 'Front',
     onClick: () => {
-      img.src = formatUrl(shirt.colors[availableColors[0]].front);
+      updateOptions({ side: SIDE.front });
     },
   });
 
   const backButton = createButton({
     text: 'Back',
     onClick: () => {
-      img.src = formatUrl(shirt.colors[availableColors[0]].back);
+      updateOptions({ side: SIDE.back });
     },
   });
 
@@ -92,9 +89,7 @@ export const createSideSelection = (img, shirt) => {
   return sideSelection;
 };
 
-export const createColorSelection = (img, shirt) => {
-  const availableColors = Object.keys(shirt.colors);
-
+export const createColorSelection = (shirt, updateOptions) => {
   const colorSelection = document.createElement('div');
   colorSelection.className = 'color-selection';
 
@@ -107,8 +102,9 @@ export const createColorSelection = (img, shirt) => {
       text: color.charAt(0).toUpperCase() + color.slice(1),
       backGroundColor: color,
       onClick: () => {
-        const frontImage = shirt.colors[color]?.front;
-        img.src = formatUrl(frontImage);
+        updateOptions({
+          color: color,
+        });
       },
     });
   });
