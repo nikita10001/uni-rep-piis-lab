@@ -1,97 +1,105 @@
 const targets = document.querySelectorAll('.target');
 
-let isDragging = false;
-let isPinned = false;
-let offsetX, offsetY;
-let currentElement = null;
-let startPosition = { top: 0, left: 0 };
-let lastTouchTime = 0;
-const doubleTapDelay = 300;
+targets.forEach((item) => {
+  let isSelected = false;
+  let offsetX, offsetY;
+  let isAssigned = false;
+  let prevPos = {
+    top: 0,
+    left: 0,
+  };
 
-targets.forEach((target) => {
-  target.addEventListener('touchstart', (e) => {
-    handleTouchStart(e, target);
-  });
-});
+  item.addEventListener('mousedown', (mouse) => clickDownHandler(mouse));
+  document.addEventListener('mouseup', () => clickUpHandler());
+  document.addEventListener('mousemove', (mouse) => moveSelectedItem(mouse));
+  item.addEventListener('dblclick', () => dbClickHandler());
+  document.addEventListener('click', () => dbClickCancelHandler());
+  document.addEventListener('keydown', (e) => pressESCHandler(e));
+  item.addEventListener('touchstart', (touch) => touchStartHandler(touch));
+  document.addEventListener('touchstart', (touch) => secondTouchHandler(touch));
+  document.addEventListener('touchend', () => touchEndHandler());
+  document.addEventListener('touchmove', (touch) => moveSelectedItem(touch));
 
-document.addEventListener('touchmove', (e) => {
-  handleTouchMove(e);
-});
+  function clickDownHandler(mouse) {
+    if (!isAssigned) {
+      isSelected = true;
 
-document.addEventListener('touchend', (e) => {
-  handleTouchEnd(e);
-});
-
-function handleTouchStart(e, target) {
-  e.preventDefault();
-
-  const currentTime = new Date().getTime();
-  if (currentTime - lastTouchTime <= doubleTapDelay) {
-    handleDoubleTap(target);
-  } else {
-    lastTouchTime = currentTime;
-  }
-
-  if (!isPinned) {
-    isDragging = true;
-    currentElement = target;
-
-    const rect = target.getBoundingClientRect();
-    offsetX = e.touches[0].clientX - rect.left;
-    offsetY = e.touches[0].clientY - rect.top;
-
-    startPosition.top = rect.top + window.scrollY;
-    startPosition.left = rect.left + window.scrollX;
-
-    target.style.position = 'absolute';
-  } else {
-    isDragging = true;
-    currentElement = target;
-  }
-}
-
-function handleDoubleTap(target) {
-  targets.forEach((t) => {
-    t.style.backgroundColor = '';
-    t.isPinned = false;
-  });
-
-  isPinned = true;
-  currentElement = target;
-  target.style.backgroundColor = 'lightblue';
-}
-
-function handleTouchMove(e) {
-  if (isDragging && currentElement) {
-    currentElement.style.top = `${e.touches[0].clientY - offsetY}px`;
-    currentElement.style.left = `${e.touches[0].clientX - offsetX}px`;
-  }
-
-  if (e.touches.length > 1) {
-    resetElementPosition();
-  }
-}
-
-function handleTouchEnd(e) {
-  if (isDragging) {
-    if (e.changedTouches.length > 1) {
-      resetElementPosition();
-    } else {
-      completeDragging();
+      offsetX = mouse.clientX - item.getBoundingClientRect().left;
+      offsetY = mouse.clientY - item.getBoundingClientRect().top;
     }
   }
-}
 
-function completeDragging() {
-  currentElement = null;
-}
-
-function resetElementPosition() {
-  if (currentElement) {
-    currentElement.style.top = `${startPosition.top}px`;
-    currentElement.style.left = `${startPosition.left}px`;
-    isPinned = false;
-    currentElement.style.backgroundColor = '';
-    currentElement = null;
+  function touchStartHandler(touch) {
+    if (!isAssigned) {
+      isSelected = true;
+      const touchPoint = touch.touches[0];
+      offsetX = touchPoint.clientX - item.getBoundingClientRect().left;
+      offsetY = touchPoint.clientY - item.getBoundingClientRect().top;
+    }
   }
-}
+
+  function secondTouchHandler(touch) {
+    if (isAssigned && touch.touches.length === 2) {
+      resetPosition();
+    }
+  }
+
+  function clickUpHandler() {
+    isSelected = false;
+  }
+
+  function touchEndHandler() {
+    isSelected = false;
+  }
+
+  function moveSelectedItem(mouse) {
+    if (isSelected || isAssigned) {
+      const posX = mouse.clientX || mouse.touches[0].clientX;
+      const posY = mouse.clientY || mouse.touches[0].clientY;
+
+      item.style.top = `${posY - offsetY}px`;
+      item.style.left = `${posX - offsetX}px`;
+    }
+  }
+
+  function moveAssignedItem(mouse) {
+    if (isAssigned) {
+      item.style.top = `${mouse.clientY - offsetY}px`;
+      item.style.left = `${mouse.clientX - offsetX}px`;
+    }
+  }
+
+  function dbClickHandler() {
+    isAssigned = true;
+
+    prevPos.top = item.style.top;
+    prevPos.left = item.style.left;
+    item.style.backgroundColor = 'black';
+    document.addEventListener('mousemove', moveAssignedItem());
+  }
+
+  function dbClickCancelHandler() {
+    if (isAssigned) {
+      isAssigned = false;
+
+      item.style.backgroundColor = 'red';
+      document.removeEventListener('mousemove', moveAssignedItem());
+    }
+  }
+
+  function pressESCHandler(e) {
+    if ((isAssigned || isSelected) && e.key === 'Escape') {
+      resetPosition();
+    }
+  }
+
+  function resetPosition() {
+    isSelected = false;
+    isAssigned = false;
+
+    item.style.top = prevPos.top;
+    item.style.left = prevPos.left;
+    item.style.backgroundColor = 'red';
+    document.removeEventListener('mousemove', moveAssignedItem);
+  }
+});
