@@ -10,7 +10,6 @@ targets.forEach((item) => {
   };
 
   //
-  document.addEventListener('mousemove', moveSelectedItem);
   item.addEventListener('dblclick', dbClickHandler);
   document.addEventListener('click', dbClickCancelHandler);
   item.addEventListener('touchstart', touchStartHandler);
@@ -37,10 +36,10 @@ targets.forEach((item) => {
     isSelected = false;
   }
 
-  function moveSelectedItem(mouse) {
+  function moveSelectedItem(touch) {
     if (isSelected || isAssigned) {
-      const posX = mouse.clientX || mouse.touches[0].clientX;
-      const posY = mouse.clientY || mouse.touches[0].clientY;
+      const posX = touch.clientX || touch.touches[0].clientX;
+      const posY = touch.clientY || touch.touches[0].clientY;
 
       item.style.top = `${posY - offsetY}px`;
       item.style.left = `${posX - offsetX}px`;
@@ -55,12 +54,13 @@ targets.forEach((item) => {
   }
 
   function dbClickHandler() {
+    console.log('db');
     isAssigned = true;
 
     prevPos.top = item.style.top;
     prevPos.left = item.style.left;
     item.style.backgroundColor = 'black';
-    document.addEventListener('mousemove', moveAssignedItem());
+    document.addEventListener('touchmove', moveAssignedItem());
   }
 
   function dbClickCancelHandler() {
@@ -68,7 +68,7 @@ targets.forEach((item) => {
       isAssigned = false;
 
       item.style.backgroundColor = 'red';
-      document.removeEventListener('mousemove', moveAssignedItem());
+      document.removeEventListener('touchmove', moveAssignedItem());
     }
   }
 
@@ -79,6 +79,6 @@ targets.forEach((item) => {
     item.style.top = prevPos.top;
     item.style.left = prevPos.left;
     item.style.backgroundColor = 'red';
-    document.removeEventListener('mousemove', moveAssignedItem);
+    document.removeEventListener('touchmove', moveAssignedItem);
   }
 });
