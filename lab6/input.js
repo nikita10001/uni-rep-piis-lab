@@ -9,8 +9,7 @@ targets.forEach((item) => {
     left: 0,
   };
 
-  // item.addEventListener('mousedown', clickDownHandler);
-  // document.addEventListener('mouseup', clickUpHandler);
+  //
   document.addEventListener('mousemove', moveSelectedItem);
   item.addEventListener('dblclick', dbClickHandler);
   document.addEventListener('click', dbClickCancelHandler);
@@ -18,15 +17,6 @@ targets.forEach((item) => {
   document.addEventListener('touchstart', secondTouchHandler);
   document.addEventListener('touchend', touchEndHandler);
   document.addEventListener('touchmove', moveSelectedItem);
-
-  function clickDownHandler(mouse) {
-    if (!isAssigned) {
-      isSelected = true;
-
-      offsetX = mouse.clientX - item.getBoundingClientRect().left;
-      offsetY = mouse.clientY - item.getBoundingClientRect().top;
-    }
-  }
 
   function touchStartHandler(touch) {
     if (!isAssigned) {
@@ -41,10 +31,6 @@ targets.forEach((item) => {
     if (isAssigned && touch.touches.length === 2) {
       resetPosition();
     }
-  }
-
-  function clickUpHandler() {
-    isSelected = false;
   }
 
   function touchEndHandler() {
