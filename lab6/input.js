@@ -9,16 +9,15 @@ targets.forEach((item) => {
     left: 0,
   };
 
-  item.addEventListener('mousedown', (mouse) => clickDownHandler(mouse));
-  document.addEventListener('mouseup', () => clickUpHandler());
-  document.addEventListener('mousemove', (mouse) => moveSelectedItem(mouse));
-  item.addEventListener('dblclick', () => dbClickHandler());
-  document.addEventListener('click', () => dbClickCancelHandler());
-  document.addEventListener('keydown', (e) => pressESCHandler(e));
-  item.addEventListener('touchstart', (touch) => touchStartHandler(touch));
-  document.addEventListener('touchstart', (touch) => secondTouchHandler(touch));
-  document.addEventListener('touchend', () => touchEndHandler());
-  document.addEventListener('touchmove', (touch) => moveSelectedItem(touch));
+  // item.addEventListener('mousedown', clickDownHandler);
+  // document.addEventListener('mouseup', clickUpHandler);
+  document.addEventListener('mousemove', moveSelectedItem);
+  item.addEventListener('dblclick', dbClickHandler);
+  document.addEventListener('click', dbClickCancelHandler);
+  item.addEventListener('touchstart', touchStartHandler);
+  document.addEventListener('touchstart', secondTouchHandler);
+  document.addEventListener('touchend', touchEndHandler);
+  document.addEventListener('touchmove', moveSelectedItem);
 
   function clickDownHandler(mouse) {
     if (!isAssigned) {
@@ -84,12 +83,6 @@ targets.forEach((item) => {
 
       item.style.backgroundColor = 'red';
       document.removeEventListener('mousemove', moveAssignedItem());
-    }
-  }
-
-  function pressESCHandler(e) {
-    if ((isAssigned || isSelected) && e.key === 'Escape') {
-      resetPosition();
     }
   }
 
