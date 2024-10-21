@@ -10,9 +10,9 @@ targets.forEach((item) => {
   };
 
   //
+  item.addEventListener('touchstart', touchStartHandler);
   item.addEventListener('dblclick', dbClickHandler);
   document.addEventListener('click', dbClickCancelHandler);
-  item.addEventListener('touchstart', touchStartHandler);
   document.addEventListener('touchstart', secondTouchHandler);
   document.addEventListener('touchend', touchEndHandler);
   document.addEventListener('touchmove', moveSelectedItem);
@@ -54,13 +54,13 @@ targets.forEach((item) => {
   }
 
   function dbClickHandler() {
-    console.log('db');
+    // alert('db click');
     isAssigned = true;
 
     prevPos.top = item.style.top;
     prevPos.left = item.style.left;
     item.style.backgroundColor = 'black';
-    document.addEventListener('touchmove', moveAssignedItem());
+    document.addEventListener('touchmove', moveAssignedItem);
   }
 
   function dbClickCancelHandler() {
@@ -68,7 +68,7 @@ targets.forEach((item) => {
       isAssigned = false;
 
       item.style.backgroundColor = 'red';
-      document.removeEventListener('touchmove', moveAssignedItem());
+      document.removeEventListener('touchmove', moveAssignedItem);
     }
   }
 
